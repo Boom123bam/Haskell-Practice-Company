@@ -48,13 +48,30 @@ findEmployeeBySkill::[Employee] -> String -> Maybe Employee
 findEmployeeBySkill [] _ = Nothing
 findEmployeeBySkill (e:es) skill = if contains (skills e) skill then Just e else findEmployeeBySkill es skill
 
-
--- TODO
 promotionEligible :: Employee -> Bool
-promotionEligible e = False
+promotionEligible e = base && additional where
+    base = case status e of
+        Active n -> n>2
+        _ -> False
+    additional = performanceRating e >= 4
+
+uniqueJoin :: [String] -> [String] -> [String]
+uniqueJoin as [] = as
+uniqueJoin as (b:bs) = uniqueJoin newAs bs where
+    newAs = if b `elem` as then b:as else as
 
 departmentStats :: [Employee] -> Department -> (Int, Float, [String])
-departmentStats emps dept = (0, 0.0, [])
+departmentStats allEmps d = 
+    let emps = filter (\e -> dept e == d) allEmps
+        count = length emps
+        totalSalary = sum (map salary emps)
+        avgSalary = if count == 0 
+                   then 0.0 
+                   else totalSalary / fromIntegral count
+        uniqueSkills=foldr uniqueJoin [] (map skills emps)
+    in (count, avgSalary, uniqueSkills)
+
+-- TODO
 
 salaryAdjustment :: Employee -> Employee
 salaryAdjustment e = e
