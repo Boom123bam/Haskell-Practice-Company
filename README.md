@@ -1,4 +1,4 @@
-# Challenge 1: Employee Management System
+# Challenge: Employee Management System
 
 ## Overview
 
