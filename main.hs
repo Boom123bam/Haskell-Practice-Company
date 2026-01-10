@@ -71,10 +71,15 @@ departmentStats allEmps d =
         uniqueSkills=foldr uniqueJoin [] (map skills emps)
     in (count, avgSalary, uniqueSkills)
 
--- TODO
-
 salaryAdjustment :: Employee -> Employee
-salaryAdjustment e = e
+salaryAdjustment e = Employee (name e) (age e) (newSalary) (dept e) (status e) (skills e) (performanceRating e) (emergencyContact e) where
+    newSalary = salary e * multiplier where
+        multiplier  
+            | dept e == Engineering && age e < 40 = 1.10
+            | performanceRating e == 5 = 1.05
+            | otherwise = 1.02
+
+-- TODO
 
 filterByComplexCriteria :: [Employee] -> [Employee]
 filterByComplexCriteria _ = []
